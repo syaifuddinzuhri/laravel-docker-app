@@ -1,0 +1,35 @@
+version: '3'
+services:
+  app:
+    image: adn13/jadwal-sidang:latest
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - cache
+    networks:
+      - app-network
+
+  web_server:
+    image: adn13/jadwal-sidang-web_server:latest
+    container_name: web_server
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8099:80"
+    depends_on:
+      - app
+    networks:
+      - app-network
+
+  cache:
+    image: redis:alpine
+    container_name: cache
+    restart: unless-stopped
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
